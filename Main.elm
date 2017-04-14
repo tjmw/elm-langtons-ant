@@ -16,7 +16,7 @@ type Direction
     | West
 
 
-type Color
+type Colour
     = Black
     | White
 
@@ -32,7 +32,7 @@ type alias Ant =
 
 
 type alias World =
-    Dict Position Color
+    Dict Position Colour
 
 
 type alias Model =
@@ -81,10 +81,10 @@ gridUnit =
 
 
 view : Model -> Svg Msg
-view { ant } =
+view { ant, world } =
     svg
         [ width "100vw", height "100vh", viewBox "0 0 500 500" ]
-        [ renderAnt ant ]
+        [ renderWorld world, renderAnt ant ]
 
 
 renderAnt : Ant -> Svg a
@@ -93,12 +93,45 @@ renderAnt { position } =
         ( xPos, yPos ) =
             position
     in
-        rect [ x <| toString <| xPos * gridUnit
-             , y <| toString <| yPos * gridUnit
-             , width "10"
-             , height "10"
-             , fill "red"
-             ] []
+        rect
+            [ x <| toString <| xPos * gridUnit
+            , y <| toString <| yPos * gridUnit
+            , width "10"
+            , height "10"
+            , fill "red"
+            ]
+            []
+
+
+renderWorld : World -> Svg a
+renderWorld world =
+    g [] (List.map renderUnit <| Dict.toList world)
+
+
+renderUnit : ( Position, Colour ) -> Svg a
+renderUnit ( position, colour ) =
+    let
+        ( xPos, yPos ) =
+            position
+    in
+        rect
+            [ x <| toString <| xPos * gridUnit
+            , y <| toString <| yPos * gridUnit
+            , width "10"
+            , height "10"
+            , fill <| colourToString colour
+            ]
+            []
+
+
+colourToString : Colour -> String
+colourToString colour =
+    case colour of
+        Black ->
+            "black"
+
+        White ->
+            "white"
 
 
 
