@@ -4,6 +4,7 @@ import Dict exposing (Dict)
 import Html exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Time exposing (millisecond, Time)
 
 
 -- MODEL
@@ -61,13 +62,13 @@ init =
 
 
 type Msg
-    = Reset
+    = Tick Time
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        _ ->
+        Tick _ ->
             ( model, Cmd.none )
 
 
@@ -140,8 +141,7 @@ colourToString colour =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        []
+    Time.every (500 * millisecond) Tick
 
 
 
