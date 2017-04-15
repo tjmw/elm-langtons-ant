@@ -75,8 +75,11 @@ update msg model =
 flipSquare : Model -> Model
 flipSquare model =
     let
-        ant = model.ant
-        world = model.world
+        ant =
+            model.ant
+
+        world =
+            model.world
     in
         { model | world = flipSquareAt ant.position world }
 
@@ -84,7 +87,8 @@ flipSquare model =
 flipSquareAt : Position -> World -> World
 flipSquareAt position world =
     let
-        currentColour = colourAt position world
+        currentColour =
+            colourAt position world
     in
         Dict.insert position (flipColour currentColour) world
 
@@ -92,8 +96,12 @@ flipSquareAt position world =
 flipColour : Colour -> Colour
 flipColour colour =
     case colour of
-      White -> Black
-      Black -> White
+        White ->
+            Black
+
+        Black ->
+            White
+
 
 turnAnt : Model -> Model
 turnAnt model =
@@ -154,7 +162,41 @@ turnLeft ant =
 
 moveForward : Model -> Model
 moveForward model =
-    model
+    let
+        ant =
+            model.ant
+    in
+        { model | ant = updateAntPosition ant }
+
+
+updateAntPosition : Ant -> Ant
+updateAntPosition ant =
+    let
+        ( x, y ) =
+            ant.position
+    in
+        case ant.direction of
+            North ->
+                { ant | position = ( x, wrap <| y - 1 ) }
+
+            East ->
+                { ant | position = ( wrap <| x + 1, y ) }
+
+            South ->
+                { ant | position = ( x, wrap <| y + 1 ) }
+
+            West ->
+                { ant | position = ( wrap <| x - 1, y ) }
+
+
+wrap : Int -> Int
+wrap int =
+    if int < 0 then
+        49
+    else if int > 49 then
+        0
+    else
+        int
 
 
 colourAt : Position -> World -> Colour
