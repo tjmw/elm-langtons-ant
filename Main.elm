@@ -279,7 +279,7 @@ colourToString colour =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Time.every (500 * millisecond) Tick
+    Time.every (100 * millisecond) Tick
 
 
 
