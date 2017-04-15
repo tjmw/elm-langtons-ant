@@ -201,12 +201,7 @@ wrap int =
 
 colourAt : Position -> World -> Colour
 colourAt position world =
-    case Dict.get position world of
-        Just colour ->
-            colour
-
-        Nothing ->
-            White
+    Dict.get position world |> Maybe.withDefault White
 
 
 
