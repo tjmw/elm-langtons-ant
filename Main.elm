@@ -192,8 +192,8 @@ updateAntPosition ant =
 wrap : Int -> Int
 wrap int =
     if int < 0 then
-        49
-    else if int > 49 then
+        gridSize - 1
+    else if int > gridSize - 1 then
         0
     else
         int
@@ -218,11 +218,24 @@ gridUnit =
     10
 
 
+gridSize : Int
+gridSize =
+    50
+
+
 view : Model -> Svg Msg
 view { ant, world } =
     svg
-        [ width "100vw", height "100vh", viewBox "0 0 500 500" ]
+        [ width "100vw"
+        , height "100vh"
+        , viewBox <| "0 0 " ++ viewBoxSize ++ " " ++ viewBoxSize
+        ]
         [ renderWorld world, renderAnt ant ]
+
+
+viewBoxSize : String
+viewBoxSize =
+    toString <| gridSize * gridUnit
 
 
 renderAnt : Ant -> Svg a
