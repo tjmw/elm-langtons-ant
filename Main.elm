@@ -20,6 +20,7 @@ type Direction
 type Colour
     = Black
     | White
+    | Red
 
 
 type alias Position =
@@ -90,18 +91,7 @@ view { ant, world } =
 
 renderAnt : Ant -> Svg a
 renderAnt { position } =
-    let
-        ( xPos, yPos ) =
-            position
-    in
-        rect
-            [ x <| toString <| xPos * gridUnit
-            , y <| toString <| yPos * gridUnit
-            , width "10"
-            , height "10"
-            , fill "red"
-            ]
-            []
+    renderUnit ( position, Red )
 
 
 renderWorld : World -> Svg a
@@ -128,6 +118,9 @@ renderUnit ( position, colour ) =
 colourToString : Colour -> String
 colourToString colour =
     case colour of
+        Red ->
+            "red"
+
         Black ->
             "black"
 
