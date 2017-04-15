@@ -72,6 +72,29 @@ update msg model =
             ( moveForward <| flipSquare <| turnAnt <| model, Cmd.none )
 
 
+flipSquare : Model -> Model
+flipSquare model =
+    let
+        ant = model.ant
+        world = model.world
+    in
+        { model | world = flipSquareAt ant.position world }
+
+
+flipSquareAt : Position -> World -> World
+flipSquareAt position world =
+    let
+        currentColour = colourAt position world
+    in
+        Dict.insert position (flipColour currentColour) world
+
+
+flipColour : Colour -> Colour
+flipColour colour =
+    case colour of
+      White -> Black
+      Black -> White
+
 turnAnt : Model -> Model
 turnAnt model =
     let
@@ -127,11 +150,6 @@ turnLeft ant =
                     North
     in
         { ant | direction = newDirection }
-
-
-flipSquare : Model -> Model
-flipSquare model =
-    model
 
 
 moveForward : Model -> Model
