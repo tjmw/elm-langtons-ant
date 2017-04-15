@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Dict exposing (Dict)
-import Html exposing (..)
+import Html
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Time exposing (millisecond, Time)
