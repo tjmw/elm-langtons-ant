@@ -20,7 +20,6 @@ type Direction
 type Colour
     = Black
     | White
-    | Red
 
 
 type alias Position =
@@ -70,7 +69,84 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Tick _ ->
-            ( model, Cmd.none )
+            ( moveForward <| flipSquare <| turnAnt <| model, Cmd.none )
+
+
+turnAnt : Model -> Model
+turnAnt model =
+    let
+        ant =
+            model.ant
+
+        world =
+            model.world
+    in
+        case colourAt ant.position world of
+            White ->
+                { model | ant = turnRight ant }
+
+            Black ->
+                { model | ant = turnLeft ant }
+
+
+turnRight : Ant -> Ant
+turnRight ant =
+    let
+        newDirection =
+            case ant.direction of
+                North ->
+                    East
+
+                East ->
+                    South
+
+                South ->
+                    West
+
+                West ->
+                    North
+    in
+        { ant | direction = newDirection }
+
+
+turnLeft : Ant -> Ant
+turnLeft ant =
+    let
+        newDirection =
+            case ant.direction of
+                North ->
+                    West
+
+                West ->
+                    South
+
+                South ->
+                    East
+
+                East ->
+                    North
+    in
+        { ant | direction = newDirection }
+
+
+flipSquare : Model -> Model
+flipSquare model =
+    model
+
+
+moveForward : Model -> Model
+moveForward model =
+    model
+
+
+colourAt : Position -> World -> Colour
+colourAt position world =
+    case Dict.get position world of
+        Just colour ->
+            colour
+
+        Nothing ->
+            White
 
 
 
@@ -91,7 +167,11 @@ view { ant, world } =
 
 renderAnt : Ant -> Svg a
 renderAnt { position } =
-    renderUnit ( position, Red )
+    let
+        ( xPos, yPos ) =
+            position
+    in
+        renderRect xPos yPos "red"
 
 
 renderWorld : World -> Svg a
@@ -104,23 +184,28 @@ renderUnit ( position, colour ) =
     let
         ( xPos, yPos ) =
             position
+
+        colourString =
+            colourToString colour
     in
-        rect
-            [ x <| toString <| xPos * gridUnit
-            , y <| toString <| yPos * gridUnit
-            , width "10"
-            , height "10"
-            , fill <| colourToString colour
-            ]
-            []
+        renderRect xPos yPos colourString
+
+
+renderRect : Int -> Int -> String -> Svg a
+renderRect xPos yPos colourString =
+    rect
+        [ x <| toString <| xPos * gridUnit
+        , y <| toString <| yPos * gridUnit
+        , width "10"
+        , height "10"
+        , fill <| colourString
+        ]
+        []
 
 
 colourToString : Colour -> String
 colourToString colour =
     case colour of
-        Red ->
-            "red"
-
         Black ->
             "black"
 
